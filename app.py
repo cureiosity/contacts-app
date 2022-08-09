@@ -1,36 +1,28 @@
 from models import *
+from playhouse.shortcuts import model_to_dict, dict_to_model
 
-contacts = []
-
-class Contact:
-  def __init__(self, first_name, last_name, phone_num, email):
-    self.first_name = first_name
-    self.last_name = last_name
-    self.phone_num = phone_num
-    self.email = email
-
-def new_contact():
-  first_name = input('First Name: ')
-  last_name = input('Last Name: ')
-  phone_num = input('Phone Number: ')
-  email = input('Email Address: ')
-  contact = Contact(first_name, last_name, phone_num, email)
-  contacts.append(contact)
-  print('')
-  print('Contact added!')
-  print('')
-  print(f'{first_name} {last_name}')
-  print(email)
-  print(phone_num)
+def welcome():
+  print('Welcome to Contacts!')
   print('')
   user_options()
 
-def welcome():
-  print('Welcome to Contacts')
+def create_new_contact():
   print('')
-  print('Add your first contact! Type the value for each field, then press Enter/Return.')
+  new_contact = Contact( \
+    first_name = input('First Name: '), \
+    last_name = input('Last Name: '), \
+    phone_num = input('Phone Number: '), \
+    email = input('Email Address: ')
+  )
+  new_contact.save()
   print('')
-  new_contact()
+  print('Contact added!')
+  print('')
+  print(f'{new_contact.first_name} {new_contact.last_name}')
+  print(new_contact.phone_num)
+  print(new_contact.email)
+  print('')
+  user_options()
 
 def user_options():
   print('To view your contacts, use the View command.')
@@ -45,7 +37,7 @@ def user_selection():
   if selection == 'view':
     view_contacts()
   elif selection == 'add':
-    new_contact()
+    create_new_contact()
   elif selection == 'exit':
     print('')
     print('Goodbye!')
@@ -57,10 +49,13 @@ def user_selection():
 
 def view_contacts():
   print('')
+  contacts = []
+  for contact in Contact.select():
+    contacts.append(model_to_dict(contact))
   for contact in contacts:
-    print(f'{contact.first_name} {contact.last_name}')
-    print(contact.email)
-    print(contact.phone_num)
+    print(f'{contact["first_name"]} {contact["last_name"]}')
+    print(f'{contact["phone_num"]}')
+    print(f'{contact["email"]}')
     print('')
   user_options()
 
