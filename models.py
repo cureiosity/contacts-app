@@ -1,4 +1,5 @@
 from peewee import *
+from playhouse.shortcuts import model_to_dict, dict_to_model
 
 db = PostgresqlDatabase( \
   'contacts',\
@@ -18,4 +19,3 @@ class Contact(BaseModel):
   last_name = CharField()
   phone_num = CharField()
   email = CharField()
-  
